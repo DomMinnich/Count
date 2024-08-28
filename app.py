@@ -3,33 +3,43 @@ import tkinter as tk
 from tkinter import filedialog, scrolledtext, messagebox
 
 def count_lines_in_file(filepath):
+    line_count = 0
+    char_count = 0
     try:
         with open(filepath, 'r', encoding='utf-8') as file:
-            return sum(1 for line in file)
+            for line in file:
+                line_count += 1
+                char_count += len(line)
     except UnicodeDecodeError:
         with open(filepath, 'r', encoding='utf-8', errors='replace') as file:
-            return sum(1 for line in file)
+            for line in file:
+                line_count += 1
+                char_count += len(line)
+    return line_count, char_count
 
 def count_lines_in_folder(folder_path):
     file_lines = []
     total_lines = 0
+    total_chars = 0
 
     for root, _, files in os.walk(folder_path):
         for filename in files:
             file_path = os.path.join(root, filename)
             if os.path.isfile(file_path):
-                line_count = count_lines_in_file(file_path)
+                line_count, char_count = count_lines_in_file(file_path)
                 relative_path = os.path.relpath(file_path, folder_path)
-                file_lines.append((relative_path, line_count))
+                file_lines.append((relative_path, line_count, char_count))
                 total_lines += line_count
+                total_chars += char_count
 
     # Sort the files by the number of lines in descending order
     file_lines.sort(key=lambda x: x[1], reverse=True)
 
     result = ""
-    for relative_path, line_count in file_lines:
-        result += f"{relative_path}: {line_count} lines\n"
-    result += f"\nTotal lines in all files: {total_lines}"
+    for relative_path, line_count, char_count in file_lines:
+        result += f"{relative_path}: {line_count} lines, {char_count} characters\n"
+    result += f"\nTotal lines in all files: {total_lines}\n"
+    result += f"Total characters in all files: {total_chars}"
     
     return result
 
