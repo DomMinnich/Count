@@ -1,5 +1,7 @@
 # Line Counter App
 
+!Update: Added character count for files and totaling
+
 ## Overview
 
 The Line Counter App is a simple Python application that allows you to count the number of lines in all text files within a selected folder. The application provides a graphical user interface (GUI) using Tkinter, making it easy for users to browse folders and view the results.
